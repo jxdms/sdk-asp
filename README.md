@@ -272,24 +272,37 @@
 	
 	mp.acctoken_LL "Access_token_Longlive"
 
+%>
 ```
 
 ### Create payment
 
 ```aspx
+<%
+
 mp.doPost("/v1/payments", payment_data)
+
+%>
 ```
 
 ### Create customer
 
 ```aspx
+<%
+
 mp.doPost("/v1/customers", '{"email" => "email@test.com"}')
+
+%>
 ```
 
 ### Get customer
 
 ```aspx
+<%
+
 mp.doGet("/v1/customers/CUSTOMER_ID")
+
+%>
 ```
 
 * View more Custom checkout related APIs in Developers Site
@@ -305,6 +318,8 @@ mp.doGet("/v1/customers/CUSTOMER_ID")
 You can access any resource from the MercadoPago API (https://api.mercadopago.com) using the generic methods:
 
 ```aspx
+<%
+
 ' Get a resource, with optional URL params. Also you can disable authentication for public APIs
 mp.doGet("/resource/uri?params=123")
 
@@ -316,4 +331,6 @@ mp.doPut("/resource/uri?params=123", data)
 
 ' Delete a resource with optional URL params.
 mp.doDelete("/resource/uri?params=123")
+
+%>
 ```
