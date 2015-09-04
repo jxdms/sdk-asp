@@ -248,3 +248,72 @@
 %>
 ```
 <a href="http://developers.mercadopago.com/documentacao/devolucao-e-cancelamento">About Cancel & Refund </a>
+
+<a name="custom-checkout"></a>
+## Customized checkout
+
+### Configure your credentials
+
+* Get your **ACCESS_TOKEN** in the following address:
+    * Argentina: [https://www.mercadopago.com/mla/account/credentials](https://www.mercadopago.com/mla/account/credentials)
+    * Brazil: [https://www.mercadopago.com/mlb/account/credentials](https://www.mercadopago.com/mlb/account/credentials)
+    * Mexico: [https://www.mercadopago.com/mlm/account/credentials](https://www.mercadopago.com/mlm/account/credentials)
+    * Venezuela: [https://www.mercadopago.com/mlv/account/credentials](https://www.mercadopago.com/mlv/account/credentials)
+    * Colombia: [https://www.mercadopago.com/mco/account/credentials](https://www.mercadopago.com/mco/account/credentials)
+
+```aspx
+
+<!--#include file="lib\mercadopago.asp"-->
+<!--#include file="lib\json2.asp"-->
+<%
+	
+	Dim mp
+	Set mp = new Mercadopago
+	
+	mp.acctoken_LL "Access_token_Longlive"
+
+```
+
+### Create payment
+
+```aspx
+mp.doPost("/v1/payments", payment_data)
+```
+
+### Create customer
+
+```aspx
+mp.doPost("/v1/customers", '{"email" => "email@test.com"}')
+```
+
+### Get customer
+
+```aspx
+mp.doGet("/v1/customers/CUSTOMER_ID")
+```
+
+* View more Custom checkout related APIs in Developers Site
+    * Argentina: [https://www.mercadopago.com.ar/developers](https://www.mercadopago.com.ar/developers)
+    * Brazil: [https://www.mercadopago.com.br/developers](https://www.mercadopago.com.br/developers)
+    * Mexico: [https://www.mercadopago.com.mx/developers](https://www.mercadopago.com.mx/developers)
+    * Venezuela: [https://www.mercadopago.com.ve/developers](https://www.mercadopago.com.ve/developers)
+    * Colombia: [https://www.mercadopago.com.co/developers](https://www.mercadopago.com.co/developers)
+
+<a name="generic-methods"></a>
+## Generic methods
+
+You can access any resource from the MercadoPago API (https://api.mercadopago.com) using the generic methods:
+
+```aspx
+' Get a resource, with optional URL params. Also you can disable authentication for public APIs
+mp.doGet("/resource/uri?params=123")
+
+' Create a resource with "data" and optional URL params.
+mp.doPost("/resource/uri", data)
+
+' Update a resource with "data" and optional URL params.
+mp.doPut("/resource/uri?params=123", data)
+
+' Delete a resource with optional URL params.
+mp.doDelete("/resource/uri?params=123")
+```

@@ -123,7 +123,7 @@ End Function
 '* @param url
 '* @return String(Json-Format) 
 '*
-Function getmethod(url) 
+Function doGet(url) 
  
 	On error resume next
         
@@ -145,7 +145,7 @@ Function getmethod(url)
 
 	If Err.number <> 0 then  Call  Error_Message()
 	
-	getmethod = httpresponse
+	doGet = httpresponse
 	
 End Function
 
@@ -154,7 +154,7 @@ End Function
 '* @param url
 '* @return String(Json-Format) 
 '*
-Function delete(url) 
+Function doDelete(url) 
  
 	On error resume next
         
@@ -176,7 +176,7 @@ Function delete(url)
 
 	If Err.number <> 0 then  Call  Error_Message()
 	
-	delete = httpresponse
+	doDelete = httpresponse
 	
 End Function
 
@@ -187,7 +187,7 @@ End Function
 '* @param bodydata
 '* @return String(Json-Format) 
 '*
- Function post(url,bodydata) 
+ Function doPost(url,bodydata) 
  
 	On error resume next
         
@@ -209,7 +209,7 @@ End Function
 
 	If Err.number <> 0 then  Call  Error_Message()
 	
-	post = httpresponse
+	doPost = httpresponse
 	
 End Function
 
@@ -219,7 +219,7 @@ End Function
 '* @param bodydata
 '* @return String(Json-Format) 
 '*
- Function put(url,bodydata) 
+ Function doPut(url,bodydata) 
  
 	On error resume next
         
@@ -241,7 +241,7 @@ End Function
 
 	If Err.number <> 0 then  Call  Error_Message()
 	
-	put = httpresponse
+	doPut = httpresponse
 	
 End Function
 
@@ -269,29 +269,6 @@ End Function
 	
 End Function
 
-
-'*
-'* Create a checkout custom
-'* @param String(Json-Format) preference
-'* @return String(Json-Format) result_pref
-'*
- Function create_checkout_custom(preference) 
- 
-	On error resume next
-        
-	Dim accessToken,method,url, result_pref
-	accessToken = get_access_token		
-			
-	method = "POST"
-	url = "/checkout/custom/create_payment?access_token=" & accessToken
-
-	result_pref = exec(method,url,MIME_JSON,preference)
-
-	If Err.number <> 0 then  Call  Error_Message()
-	
-	create_checkout_custom = result_pref
-	
-End Function
 
 '*
 '* Get information for specific payment
