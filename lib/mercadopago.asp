@@ -7,15 +7,16 @@
 ' @author Victor Vasconcellos
 
 
-Const API_BASE_URL = "https://api.mercadolibre.com"
+Const API_BASE_URL = "https://api.mercadopago.com"
 Const MIME_JSON = "application/json"
 Const MIME_FORM = "application/x-www-form-urlencoded"
-Const version = "0.1.0"
+Const version = "0.1.1"
 
 Class Mercadopago
 
 Dim Client_Id
 Dim  Client_Secret
+Dim Acctoken_Longlive
 
 Public Property Get getClient_Id
 		getClient_Id=Client_Id		
@@ -33,6 +34,14 @@ Public Function SetClient_Secret(varClient_Secret)
 		Client_Secret= varClient_Secret
 End Function
 
+Public Property Get getAcctoken_Longlive
+		getAcctoken_Longlive=Acctoken_Longlive		
+End Property
+
+Public Function SetAcctoken_Longlive(varAccesstoken)
+		Acctoken_Longlive= varAccesstoken
+End Function
+
 Function exec(Method,URL,Content_Type,Body)
 	
 	On error resume next
@@ -46,6 +55,8 @@ Function exec(Method,URL,Content_Type,Body)
     xmlHttp.SetRequestHeader "Accept", MIME_JSON
     xmlHttp.SetRequestHeader "Content-Type", Content_Type
     xmlHttp.setRequestHeader "User-Agent", "MercadoPago ASP SDK v" & version
+	xmlHttp.setOption SXH_OPTION_IGNORE_SERVER_SSL_CERT_ERROR_FLAGS, xmlHttp.getOption(SXH_OPTION_IGNORE_SERVER_SSL_CERT_ERROR_FLAGS) - SXH_SERVER_CERT_IGNORE_ALL_SERVER_ERRORS
+
     xmlHttp.Send Body
 	
 	If Err.number <> 0 then  Call  Error_Message()
@@ -80,24 +91,160 @@ Function get_access_token()
 
 	On error resume next
 	
-	Dim resp_json,method,url,body
+	Dim resp_json,method,url,body,resp_accesstoken
 		
 	method = "POST"
 	url = "/oauth/token"
 	body = "grant_type=client_credentials&client_id=" & getClient_Id & "&client_secret=" & getClient_Secret
 		
-	resp_json = exec(method,url,MIME_FORM,body)
-		
-	Dim objJSON,retJSON 
+	if getAcctoken_Longlive <> "" then
+	
+	   resp_accesstoken=getAcctoken_Longlive
+	
+	else
+	
+		resp_json = exec(method,url,MIME_FORM,body)
+		Dim objJSON,retJSON 
 
-	Set objJSON = JSON
-	Set retJSON = objJSON.parse(join(array(resp_json)))
+		Set objJSON = JSON
+		Set retJSON = objJSON.parse(join(array(resp_json)))
+		If Err.number <> 0 then  Call  Error_Message()
 		
-	If Err.number <> 0 then  Call  Error_Message()
+		resp_accesstoken = retJSON.access_token
+	
+	end if
 		
-	get_access_token = retJSON.access_token
+	get_access_token = resp_accesstoken
 
 End Function
+
+'*
+'* Http method GET
+'* @param url
+'* @return String(Json-Format) 
+'*
+Function doGet(url) 
+ 
+	On error resume next
+        
+	Dim accessToken,method,httpresponse
+	accessToken = get_access_token				
+	method = "GET"
+	
+	if InStr(url,"?") <> 0 then
+	
+		url = url & "&access_token=" & accessToken
+	
+	else
+	   
+	   url = url & "?access_token=" & accessToken
+	   
+	end if
+		
+	httpresponse = exec(method,url,MIME_JSON,null)
+
+	If Err.number <> 0 then  Call  Error_Message()
+	
+	doGet = httpresponse
+	
+End Function
+
+'*
+'* Http method DELETE
+'* @param url
+'* @return String(Json-Format) 
+'*
+Function doDelete(url) 
+ 
+	On error resume next
+        
+	Dim accessToken,method,httpresponse
+	accessToken = get_access_token				
+	method = "DELETE"
+	
+	if InStr(url,"?") <> 0 then
+	
+		url = url & "&access_token=" & accessToken
+	
+	else
+	   
+	   url = url & "?access_token=" & accessToken
+	   
+	end if
+		
+	httpresponse = exec(method,url,MIME_JSON,null)
+
+	If Err.number <> 0 then  Call  Error_Message()
+	
+	doDelete = httpresponse
+	
+End Function
+
+
+'*
+'* Http method POST
+'* @param url
+'* @param bodydata
+'* @return String(Json-Format) 
+'*
+ Function doPost(url,bodydata) 
+ 
+	On error resume next
+        
+	Dim accessToken,method,httpresponse
+	accessToken = get_access_token				
+	method = "POST"
+	
+	if InStr(url,"?") <> 0 then
+	
+		url = url & "&access_token=" & accessToken
+	
+	else
+	   
+	   url = url & "?access_token=" & accessToken
+	   
+	end if
+		
+	httpresponse = exec(method,url,MIME_JSON,bodydata)
+
+	If Err.number <> 0 then  Call  Error_Message()
+	
+	doPost = httpresponse
+	
+End Function
+
+'*
+'* Http method PUT
+'* @param url
+'* @param bodydata
+'* @return String(Json-Format) 
+'*
+ Function doPut(url,bodydata) 
+ 
+	On error resume next
+        
+	Dim accessToken,method,httpresponse
+	accessToken = get_access_token				
+	method = "PUT"
+	
+	if InStr(url,"?") <> 0 then
+	
+		url = url & "&access_token=" & accessToken
+	
+	else
+	   
+	   url = url & "?access_token=" & accessToken
+	   
+	end if
+		
+	httpresponse = exec(method,url,MIME_JSON,bodydata)
+
+	If Err.number <> 0 then  Call  Error_Message()
+	
+	doPut = httpresponse
+	
+End Function
+
 
 '*
 '* Create a checkout preference
@@ -121,6 +268,7 @@ End Function
 	create_preference = result_pref
 	
 End Function
+
 
 '*
 '* Get information for specific payment
@@ -361,6 +509,11 @@ Function get_preapproval_payment(id)
 
 End Function
 
+Function acctoken_LL(acc_token)
+	
+	SetAcctoken_Longlive(acc_token)
+
+End Function
 
 Function construct(ClientID,ClientSecret)
 	
