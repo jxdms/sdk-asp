@@ -44,10 +44,10 @@
 	'Set retJSON = objJSON.parse(join(array(payment_info)))
 	
 	'Response.write( " **** DECODE JSON **** <BR><BR> ")
-	'Response.write( " - id :" & retJSON.collection.id  & "<br>"  )
-	'Response.write( " - external_reference :" & retJSON.collection.external_reference  & "<br>" )
-	'Response.write( " - status : " & retJSON.collection.status  & "<br>"  )
-	'Response.write( " - payment_type : " & retJSON.collection.payment_type  & "<br>"  )
+	'Response.write( " - id :" & retJSON.id  & "<br>"  )
+	'Response.write( " - external_reference :" & retJSON.external_reference  & "<br>" )
+	'Response.write( " - status : " & retJSON.status  & "<br>"  )
+	'Response.write( " - payment_type : " & retJSON.payment_type_id  & "<br>"  )
 
 
 

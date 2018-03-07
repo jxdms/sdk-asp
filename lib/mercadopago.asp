@@ -10,7 +10,7 @@
 Const API_BASE_URL = "https://api.mercadopago.com"
 Const MIME_JSON = "application/json"
 Const MIME_FORM = "application/x-www-form-urlencoded"
-Const version = "0.1.1"
+Const version = "0.1.2"
 
 Class Mercadopago
 
@@ -285,7 +285,7 @@ Function get_payment_info(id)
 	accessToken = get_access_token
 
 	method = "GET"
-	url = "/collections/notifications/" & id & "?access_token=" & accessToken
+	url = "/v1/payments/" & id & "?access_token=" & accessToken
 	
 	payment_info = exec(method,url,MIME_JSON,null)
 
@@ -310,9 +310,9 @@ Function refund_payment(id)
 
 	accessToken = get_access_token
 
-	method = "PUT"
-	url = "/collections/" & id & "?access_token=" & accessToken
-	body = "{""status"":""refunded""}"
+	method = "POST"
+	url = "/v1/payments/" & id & "/refunds?access_token=" & accessToken
+	body = "{}"
 	
 	refund = exec(method,url,MIME_JSON,body)
 
@@ -339,7 +339,7 @@ Function cancel_payment(id)
 	accessToken = get_access_token
 
 	method = "PUT"
-	url = "/collections/" & id & "?access_token=" & accessToken
+	url = "/v1/payments/" & id & "?access_token=" & accessToken
 	body = "{""status"":""cancelled""}"
 	
 	cancel = exec(method,url,MIME_JSON,body)
@@ -400,7 +400,7 @@ Function search_payment(filters,offset,limit)
 	filters = filters & "&offset=" & offset & "&limit=" & limit
 
 	method = "GET"
-	url = "/collections/search?" & filters & "&access_token=" & accessToken
+	url = "/v1/payments/search?" & filters & "&access_token=" & accessToken
 	
 	search_pay = exec(method,url,MIME_JSON,null)
 
